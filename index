@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>sites</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #f4f6f9;
+      margin: 0;
+      padding: 12px;
+      color: #333;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    h1 {
+      text-align: center;
+      color: #1a73e8;
+      margin: 10px 0 15px 0;
+      font-size: 24px;
+    }
+
+    /* 극도로 압축된 컴팩트 입력 폼 */
+    .form-container {
+      background: white;
+      padding: 10px 12px;
+      border-radius: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      margin-bottom: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form-row {
+      display: flex;
+      gap: 6px;
+      width: 100%;
+      align-items: center;
+    }
+    .form-container input {
+      flex: 1;
+      height: 34px;
+      padding: 6px 10px;
+      border: 1px solid #dadce0;
+      border-radius: 6px;
+      font-size: 13px;
+      outline: none;
+      background-color: #fafafa;
+      box-sizing: border-box;
+    }
+    .btn-submit {
+      background-color: #1a73e8;
+      color: white;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      height: 34px;
+      padding: 0 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+    .btn-submit:hover {
+      background-color: #1557b0;
+    }
+    .btn-cancel {
+      background-color: #e0e0e0;
+      color: #333;
+      border: none;
+      cursor: pointer;
+      height: 34px;
+      padding: 0 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    /* 검색창 */
+    .search-container {
+      margin-bottom: 15px;
+    }
+    .search-container input {
+      width: 100%;
+      padding: 10px 12px;
+      box-sizing: border-box;
+      border: 1px solid #dadce0;
+      border-radius: 8px;
+      font-size: 14px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      outline: none;
+    }
+
+    /* 탭 메뉴 */
+    .tabs-wrapper {
+      display: flex;
+      align-items: center;
+      border-bottom: 2px solid #dee2e6;
+      margin-bottom: 15px;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+    .tabs {
+      display: flex;
+      gap: 6px;
+      width: 100%;
+      align-items: center;
+    }
+    
+    /* 탭 버튼 자체에 삭제 버튼을 내장하여 오디세이 [-] 형태로 구현 */
+    .tab-item-container {
+      display: flex;
+      align-items: center;
+      background-color: #f1f3f4;
+      border-radius: 6px;
+      padding: 2px 6px;
+      border: 1px solid transparent;
+      transition: all 0.2s;
+    }
+    .tab-item-container.active {
+      background-color: #e8f0fe;
+      border-color: #1a73e8;
+    }
+    .tab-btn {
+      padding: 6px 8px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-size: 14px;
+      font-weight: bold;
+      color: #5f6368;
+      outline: none;
+    }
+    .tab-item-container.active .tab-btn {
+      color: #1a73e8;
+    }
+    /* 개별 탭을 통째로 삭제하는 [-] 버튼 */
+    .btn-tab-delete {
+      border: none;
+      background: none;
+      color: #d93025;
+      font-weight: bold;
+      font-size: 15px;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: 2px;
+    }
+    .btn-tab-delete:hover {
+      background-color: #fce8e6;
+    }
+
+    /* 서가 보관함 레이아웃 */
+    .bookshelf {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+
+    /* 개별 탭 콘텐츠 리스트 */
+    .book-box {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .book-title {
+      font-size: 16px;
+      font-weight: bold;
+      color: #1a73e8;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #f1f3f4;
+      margin-bottom: 10px;
+    }
+
+    /* 내부 매체 리스트 */
+    .sub-item {
+      background: #f8f9fa;
+      padding: 8px 10px;
+      border-radius: 6px;
+      margin-bottom: 6px;
+      font-size: 13px;
+      border-left: 3px solid #4285f4;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .sub-item-link-wrap {
+      flex: 1;
+      font-weight: bold;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .sub-item-link-wrap a {
+      color: #1a73e8;
+      text-decoration: none;
+    }
+    .sub-item-link-wrap a:hover {
+      text-decoration: underline;
+    }
+
+    .sub-actions {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .btn-action {
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 15px;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+    .btn-edit { color: #1a73e8; }
+    .btn-delete { color: #d93025; }
+    .btn-edit:hover, .btn-delete:hover { background: #e8f0fe; }
+    
+    /* 로딩 인디케이터 */
+    .loading {
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      color: #666;
+    }
+
+    /* 모바일 맞춤 조정 */
+    @media (max-width: 600px) {
+      body { padding: 8px; }
+      .book-title { font-size: 15px; }
+      .sub-item { padding: 6px 8px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>[sites]</h1>
+  
+  <form id="siteForm" class="form-container" onsubmit="handleSubmit(event)">
+    <input type="hidden" name="rowNum" id="rowNum">
+    
+    <div class="form-row">
+      <input type="text" name="title" id="formTitle" placeholder="명칭 (예: 오디세이, 마나)" required style="width: 100%;">
+    </div>
+    
+    <div class="form-row">
+      <input type="text" name="description" placeholder="매체명 (예: 콜라이드리뷰)" required style="flex: 2;">
+      <input type="url" name="url" placeholder="주소 (https://...)" required style="flex: 3;">
+      <button type="submit" class="btn-submit" id="submitBtn">등록</button>
+      <button type="button" class="btn-cancel" style="display:none;" id="cancelBtn" onclick="resetForm()">취소</button>
+    </div>
+  </form>
+
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="작품명이나 매체명으로 검색..." oninput="renderData()">
+  </div>
+
+  <div class="tabs-wrapper">
+    <div class="tabs" id="tabBar"></div>
+  </div>
+
+  <div id="loadingText" class="loading" style="display: none;">데이터를 처리하는 중입니다...</div>
+
+  <div class="bookshelf" id="bookshelf"></div>
+</div>
+
+<script>
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwQo4oZBYolM6FxpVORSJjWqWdUkMQP0POXd6HrkoWrg6BVmIdCEQ23vOUp98HXKMdrow/exec";
+  
+  let allRawData = [];
+  let tabList = []; // 명칭(title)을 기반으로 동적 생성할 탭 배열
+  let currentTab = ''; // 현재 선택된 활성 탭
+
+  window.addEventListener('DOMContentLoaded', () => {
+    loadData();
+  });
+
+  // 데이터 불러오기 (GET)
+  function loadData() {
+    showLoading(true);
+    fetch(WEB_APP_URL)
+      .then(response => response.json())
+      .then(data => {
+        allRawData = data;
+        
+        // 데이터 내의 'tab' 혹은 'title' 필드를 결합하여 고유 탭 리스트 추출
+        extractTabsFromData();
+        
+        renderTabs();
+        renderData();
+        showLoading(false);
+      })
+      .catch(err => {
+        console.error("데이터 로드 실패:", err);
+        showLoading(false);
+      });
+  }
+
+  // 중복이 제거된 고유 명칭(탭) 목록 추출
+  function extractTabsFromData() {
+    const uniqueTabs = new Set();
+    
+    allRawData.forEach(item => {
+      // 명칭(tab 필드 또는 title 필드)이 존재하면 수집
+      const tName = item.tab || item.title;
+      if (tName && tName.trim() !== '') {
+        uniqueTabs.add(tName.trim());
+      }
+    });
+
+    tabList = Array.from(uniqueTabs);
+
+    // 현재 선택된 탭이 활성 리스트에 없으면 첫 번째 탭으로 기본 선택
+    if (!currentTab || !tabList.map(t => t.toLowerCase()).includes(currentTab.toLowerCase())) {
+      currentTab = tabList[0] ? tabList[0].toLowerCase() : '';
+    }
+  }
+
+  // 동적 탭 UI 렌더링 (삭제 버튼 [-] 내장)
+  function renderTabs() {
+    const tabBar = document.getElementById('tabBar');
+    tabBar.innerHTML = '';
+
+    tabList.forEach(tabName => {
+      const activeName = tabName.trim().toLowerCase();
+      const isActive = activeName === currentTab.toLowerCase();
+
+      // 탭 컨테이너
+      const tabItemContainer = document.createElement('div');
+      tabItemContainer.className = `tab-item-container ${isActive ? 'active' : ''}`;
+
+      // 탭 클릭 버튼
+      const btn = document.createElement('button');
+      btn.className = 'tab-btn';
+      btn.textContent = tabName;
+      btn.onclick = () => switchTab(activeName);
+
+      // 개별 탭 전체 삭제 버튼 [-]
+      const delBtn = document.createElement('button');
+      delBtn.className = 'btn-tab-delete';
+      delBtn.textContent = '[-]';
+      delBtn.title = `"${tabName}" 전체 삭제`;
+      delBtn.onclick = (e) => {
+        e.stopPropagation();
+        deleteEntireTab(tabName);
+      };
+
+      tabItemContainer.appendChild(btn);
+      tabItemContainer.appendChild(delBtn);
+      tabBar.appendChild(tabItemContainer);
+    });
+  }
+
+  function switchTab(tabName) {
+    currentTab = tabName;
+    renderTabs();
+    renderData();
+    
+    // 신규 등록 시 현재 보고 있는 탭의 명칭이 폼에 자동으로 들어가도록 편의 기능 지원
+    const targetTabObj = tabList.find(t => t.toLowerCase() === currentTab.toLowerCase());
+    if (targetTabObj) {
+      document.getElementById('formTitle').value = targetTabObj;
+    }
+  }
+
+  // 선택된 탭 내부의 매체 목록들을 렌더링
+  function renderData() {
+    const searchKeyword = document.getElementById('searchInput').value.toLowerCase();
+    const bookshelf = document.getElementById('bookshelf');
+    bookshelf.innerHTML = '';
+
+    // 1. 선택된 탭(명칭) 및 검색 키워드 필터링
+    const filtered = allRawData.filter(item => {
+      const itemTab = (item.tab || item.title || '').toLowerCase();
+      const matchTab = itemTab === currentTab.toLowerCase();
+      const matchSearch = (item.title || '').toLowerCase().includes(searchKeyword) || 
+                          (item.description || '').toLowerCase().includes(searchKeyword);
+      return matchTab && matchSearch;
+    });
+
+    if (filtered.length === 0) {
+      bookshelf.innerHTML = `<div style="padding: 20px; text-align: center; color: #888;">등록된 매체가 없습니다. 새로운 매체를 추가해 보세요!</div>`;
+      return;
+    }
+
+    // 2. 현재 선택된 탭 디자인 박스 구성
+    const activeTabObj = tabList.find(t => t.toLowerCase() === currentTab.toLowerCase()) || currentTab;
+    const bookBox = document.createElement('div');
+    bookBox.className = 'book-box';
+
+    const bookTitleDiv = document.createElement('div');
+    bookTitleDiv.className = 'book-title';
+    bookTitleDiv.innerText = activeTabObj;
+
+    const bookContentsDiv = document.createElement('div');
+
+    // 3. 필터링된 하위 매체 리스트 추가
+    filtered.forEach(item => {
+      const subItem = document.createElement('div');
+      subItem.className = 'sub-item';
+      
+      const itemEscaped = encodeURIComponent(JSON.stringify(item));
+      
+      subItem.innerHTML = `
+        <div class="sub-item-link-wrap">
+          <a href="${item.url}" target="_blank" title="${item.url}">${item.description}</a>
+        </div>
+        <div class="sub-actions">
+          <button type="button" class="btn-action btn-edit" title="수정" onclick="startEdit('${itemEscaped}')">[+]</button>
+          <button type="button" class="btn-action btn-delete" title="삭제" onclick="deleteItem('${item.rowNum}')">[-]</button>
+        </div>
+      `;
+      bookContentsDiv.appendChild(subItem);
+    });
+
+    bookBox.appendChild(bookTitleDiv);
+    bookBox.appendChild(bookContentsDiv);
+    bookshelf.appendChild(bookBox);
+  }
+
+  // 폼 등록 및 수정 (POST)
+  function handleSubmit(e) {
+    e.preventDefault();
+    showLoading(true);
+    
+    const form = document.getElementById('siteForm');
+    const formData = new FormData(form);
+    
+    const inputTitle = formData.get('title').trim();
+
+    // 입력받은 명칭(title)을 구글 시트의 'tab'과 'title' 열 모두에 동일하게 매핑하여 저장합니다.
+    const item = {
+      rowNum: formData.get('rowNum'),
+      tab: inputTitle, 
+      title: inputTitle,
+      description: formData.get('description'),
+      url: formData.get('url')
+    };
+
+    fetch(WEB_APP_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: "save", item: item })
+    })
+    .then(response => response.json())
+    .then(() => {
+      // 저장 성공 후 등록한 명칭 탭으로 포커스 고정
+      currentTab = inputTitle.toLowerCase();
+      resetForm();
+      loadData();
+    })
+    .catch(err => {
+      console.error("저장 실패:", err);
+      showLoading(false);
+    });
+  }
+
+  // [수정] 버튼 클릭 시 입력 폼에 바인딩
+  function startEdit(itemEscaped) {
+    const item = JSON.parse(decodeURIComponent(itemEscaped));
+    
+    document.getElementById('rowNum').value = item.rowNum;
+    const form = document.getElementById('siteForm');
+    form.elements['title'].value = item.tab || item.title;
+    form.elements['description'].value = item.description;
+    form.elements['url'].value = item.url;
+    
+    document.getElementById('submitBtn').innerText = '완료';
+    document.getElementById('cancelBtn').style.display = 'inline-block';
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+
+  // 개별 매체 링크 단건 삭제
+  function deleteItem(rowNum) {
+    if(confirm("이 링크 항목을 정말 삭제하시겠습니까?")) {
+      showLoading(true);
+      fetch(WEB_APP_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: "delete", rowNum: rowNum })
+      })
+      .then(response => response.json())
+      .then(() => {
+        loadData();
+      })
+      .catch(err => {
+        console.error("삭제 실패:", err);
+        showLoading(false);
+      });
+    }
+  }
+
+  // [탭 전체 삭제 기능] - 선택한 탭(작품) 하위의 모든 행(rowNum 목록)을 일괄 삭제합니다.
+  function deleteEntireTab(tabName) {
+    // 해당 탭명에 소속된 모든 아이템 필터링
+    const targetsToDelete = allRawData.filter(item => {
+      const itemTab = (item.tab || item.title || '').toLowerCase();
+      return itemTab === tabName.toLowerCase();
+    });
+
+    if (targetsToDelete.length === 0) return;
+
+    if(confirm(`"${tabName}" 탭과 그 안에 등록된 모든 주소(${targetsToDelete.length}개)를 통째로 삭제하시겠습니까?`)) {
+      showLoading(true);
+      
+      // 순차적으로 혹은 비동기 병렬로 모든 소속 행들을 일괄 삭제 요청합니다.
+      const deletePromises = targetsToDelete.map(item => {
+        return fetch(WEB_APP_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "delete", rowNum: item.rowNum })
+        });
+      });
+
+      Promise.all(deletePromises)
+        .then(() => {
+          // 삭제 후 활성화 탭을 초기화하여 새로고침
+          currentTab = '';
+          loadData();
+        })
+        .catch(err => {
+          console.error("탭 전체 삭제 실패:", err);
+          showLoading(false);
+        });
+    }
+  }
+
+  // 로딩바 관리
+  function showLoading(isLoading) {
+    document.getElementById('loadingText').style.display = isLoading ? 'block' : 'none';
+  }
+
+  // 폼 입력 리셋
+  function resetForm() {
+    document.getElementById('rowNum').value = '';
+    document.getElementById('siteForm').reset();
+    document.getElementById('submitBtn').innerText = '등록';
+    document.getElementById('cancelBtn').style.display = 'none';
+    
+    // 현재 보고 있는 탭 이름을 명칭 칸에 미리 기본 세팅 유지
+    const targetTabObj = tabList.find(t => t.toLowerCase() === currentTab.toLowerCase());
+    if (targetTabObj) {
+      document.getElementById('formTitle').value = targetTabObj;
+    }
+  }
+</script>
+
+</body>
+</html>
