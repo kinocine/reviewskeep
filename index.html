@@ -256,6 +256,43 @@
       color: #666;
     }
 
+    /* 하단 데이터 관리 구역 스타일 */
+    .db-management-zone {
+      margin-top: 40px;
+      margin-bottom: 20px;
+      padding: 15px;
+      background: #eaeded;
+      border-radius: 10px;
+      border: 1px dashed #bdc3c7;
+      text-align: center;
+    }
+    .db-management-title {
+      font-size: 12px;
+      color: #7f8c8d;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    .db-btn-group {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+    .btn-db-opt {
+      padding: 8px 16px;
+      font-size: 12px;
+      font-weight: bold;
+      border: 1px solid #bdc3c7;
+      border-radius: 6px;
+      background: white;
+      cursor: pointer;
+      color: #555;
+      transition: background 0.2s;
+    }
+    .btn-db-opt:hover {
+      background: #f2f4f4;
+      color: #333;
+    }
+
     /* 모바일 반응형 디자인 미세조정 */
     @media (max-width: 600px) {
       body { padding: 8px; }
@@ -301,6 +338,17 @@
 
   <!-- 선택된 서가 목록 출력 -->
   <div class="bookshelf-content" id="bookshelfContent"></div>
+
+  <!-- 하단 데이터 동기화/백업 관리 영역 -->
+  <div class="db-management-zone">
+    <div class="db-management-title">기기간 데이터 이동 관리 (로컬 백업/복원)</div>
+    <div class="db-btn-group">
+      <button type="button" class="btn-db-opt" onclick="backupData()">[백업하기]</button>
+      <button type="button" class="btn-db-opt" onclick="triggerRestore()">[db복원]</button>
+    </div>
+    <!-- 파일 오픈용 숨김 input -->
+    <input type="file" id="dbFileInput" style="display:none;" accept=".txt" onchange="restoreData(event)">
+  </div>
 </div>
 
 <script>
@@ -627,6 +675,94 @@
     if (targetTabObj) {
       document.getElementById('formTitle').value = targetTabObj;
     }
+  }
+
+  // ================= 기기간 공유 보완용 데이터 백업/복원 기능 =================
+
+  // [백업하기] 실행 함수
+  function backupData() {
+    if (allRawData.length === 0) {
+      alert("백업할 데이터가 없습니다.");
+      return;
+    }
+    
+    // 원본 데이터 배열과 로컬스토리지 보관 정보를 한 객체에 패키징
+    const backupPackage = {
+      timestamp: new Date().toISOString(),
+      archivedTabs: localStorage.getItem('archivedTabs') || '[]',
+      data: allRawData
+    };
+    
+    const jsonString = JSON.stringify(backupPackage, null, 2);
+    const blob = new Blob([jsonString], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "cinematic_perspective_backup.txt";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+
+  // [db복원] 버튼 트리거 함수
+  function triggerRestore() {
+    document.getElementById('dbFileInput').click();
+  }
+
+  // [db복원] 실제 로직 수행 함수
+  function restoreData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (!confirm("가져온 백업 데이터로 구글 시트의 전체 DB를 업데이트 하시겠습니까?\n이 작업은 구글 서버의 시트 데이터를 완전히 동기화합니다.")) {
+      event.target.value = '';
+      return;
+    }
+
+    showLoading(true);
+    const reader = new FileReader();
+    
+    reader.onload = function(e) {
+      try {
+        const parsed = JSON.parse(e.target.result);
+        
+        // 정상 구조 유효성 검증
+        if (!parsed.data || !Array.isArray(parsed.data)) {
+          throw new Error("올바른 백업 파일 형식이 아닙니다.");
+        }
+
+        // 로컬스토리지 정보 동기화 복원
+        if (parsed.archivedTabs) {
+          localStorage.setItem('archivedTabs', parsed.archivedTabs);
+        }
+
+        // 앱스 스크립트로 통째 전송 처리 (action: "restore" 액션 호출 체계)
+        fetch(WEB_APP_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "restore", items: parsed.data })
+        })
+        .then(response => response.json())
+        .then(res => {
+          alert("성공적으로 데이터베이스가 전체 동기화/복원되었습니다.");
+          currentTab = '';
+          loadData();
+        })
+        .catch(err => {
+          console.error("복원 전송 실패:", err);
+          alert("서버 전송 중 오류가 발생했습니다. Apps Script 설정을 확인하세요.");
+          showLoading(false);
+        });
+
+      } catch (err) {
+        alert("파일 처리 오류: " + err.message);
+        showLoading(false);
+      }
+      event.target.value = ''; // 초기화
+    };
+    
+    reader.readAsText(file);
   }
 </script>
 
