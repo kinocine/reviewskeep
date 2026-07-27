@@ -26,13 +26,13 @@
       letter-spacing: -0.5px;
     }
 
-    /* 개선된 폼 레이아웃 (줄바꿈 및 주소창 확장) */
+    /* 개선된 폼 레이아웃 */
     .form-container {
       background: white;
       padding: 12px;
       border-radius: 12px;
       box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-      margin-bottom: 15px;
+      margin-bottom: 12px;
       display: flex;
       flex-direction: column;
       gap: 8px;
@@ -86,33 +86,25 @@
       flex-shrink: 0;
     }
 
-    /* 검색창 */
-    .search-container {
-      margin-bottom: 15px;
-    }
-    .search-container input {
-      width: 100%;
-      padding: 10px 12px;
-      box-sizing: border-box;
-      border: 1px solid #dadce0;
-      border-radius: 8px;
-      font-size: 14px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-      outline: none;
+    /* 주소창 옆으로 이동한 통합 검색창 스타일 */
+    .inline-search {
+      flex: 1.2 !important; /* 주소창과 밸런스를 맞추기 위해 약간 더 넓게 할당 */
+      background-color: #fffde7 !important; /* 검색창임을 인지하도록 옅은 노란빛 감돌게 설정 */
+      border-color: #fbc02d !important;
     }
 
-    /* 소설가의 방 대용 서가(Grid) 레이아웃 - 무조건 한 줄에 3개 고정 */
+    /* 서가(Grid) 레이아웃 - 무조건 한 줄에 5개 고정 */
     .bookshelf-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-bottom: 20px;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      margin-bottom: 15px;
     }
     .shelf-box {
       background: white;
       border: 1px solid #dadce0;
       border-radius: 8px;
-      padding: 24px 8px 16px 8px; /* 구석 버튼 공간 확보를 위해 상단 패딩 확대 */
+      padding: 20px 6px 12px 6px;
       text-align: center;
       cursor: pointer;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
@@ -122,7 +114,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      min-height: 85px;
+      min-height: 70px;
       box-sizing: border-box;
     }
     .shelf-box:hover {
@@ -134,7 +126,6 @@
       background-color: #e8f0fe;
       border-color: #1a73e8;
     }
-    /* 하단 보관 이동(S) 처리된 박스 스타일 */
     .shelf-box.archived {
       background-color: #f5f5f5;
       border-color: #e0e0e0;
@@ -144,7 +135,7 @@
       opacity: 1;
     }
     .shelf-title {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: bold;
       color: #333;
       word-break: break-all;
@@ -157,27 +148,27 @@
     /* 서가 구석 미니 버튼 [S | D] */
     .shelf-actions {
       position: absolute;
-      top: 4px;
-      right: 4px;
+      top: 3px;
+      right: 3px;
       display: flex;
-      gap: 4px;
+      gap: 2px;
     }
     .btn-shelf-opt {
       border: none;
       background: none;
-      font-size: 10px;
+      font-size: 9px;
       font-weight: bold;
       cursor: pointer;
-      padding: 2px 4px;
+      padding: 1px 3px;
       border-radius: 3px;
       opacity: 0.4;
       transition: opacity 0.2s;
     }
     .shelf-box:hover .btn-shelf-opt {
-      opacity: 1; /* 마우스 올렸을 때 선명하게 표기 */
+      opacity: 1;
     }
-    .btn-shelf-opt.opt-s { color: #188038; } /* Archive/Save 토글 */
-    .btn-shelf-opt.opt-d { color: #d93025; } /* Delete */
+    .btn-shelf-opt.opt-s { color: #188038; }
+    .btn-shelf-opt.opt-d { color: #d93025; }
     .btn-shelf-opt:hover { background: rgba(0,0,0,0.05); }
 
     /* 서가 내용 리스트 출력 공간 */
@@ -194,7 +185,7 @@
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
     .book-title {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: bold;
       color: #1a73e8;
       padding-bottom: 8px;
@@ -248,7 +239,6 @@
     .btn-delete { color: #d93025; }
     .btn-edit:hover, .btn-delete:hover { background: #e8f0fe; }
     
-    /* 로딩 인디케이터 */
     .loading {
       text-align: center;
       padding: 20px;
@@ -256,20 +246,20 @@
       color: #666;
     }
 
-    /* 하단 데이터 관리 구역 스타일 */
+    /* 하단 데이터 관리 구역 */
     .db-management-zone {
-      margin-top: 40px;
-      margin-bottom: 20px;
-      padding: 15px;
+      margin-top: 30px;
+      margin-bottom: 15px;
+      padding: 12px;
       background: #eaeded;
       border-radius: 10px;
       border: 1px dashed #bdc3c7;
       text-align: center;
     }
     .db-management-title {
-      font-size: 12px;
+      font-size: 11px;
       color: #7f8c8d;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       font-weight: bold;
     }
     .db-btn-group {
@@ -278,8 +268,8 @@
       gap: 10px;
     }
     .btn-db-opt {
-      padding: 8px 16px;
-      font-size: 12px;
+      padding: 6px 12px;
+      font-size: 11px;
       font-weight: bold;
       border: 1px solid #bdc3c7;
       border-radius: 6px;
@@ -293,15 +283,18 @@
       color: #333;
     }
 
-    /* 모바일 반응형 디자인 미세조정 */
+    /* 모바일 반응형 디자인 초소형 최적화 */
     @media (max-width: 600px) {
-      body { padding: 8px; }
-      h1 { font-size: 22px; }
-      .book-title { font-size: 15px; }
-      .sub-item { padding: 6px 8px; }
-      .shelf-box { min-height: 75px; padding: 20px 4px 10px 4px; }
-      .shelf-title { font-size: 12px; }
-      .btn-shelf-opt { opacity: 0.7; font-size: 9px; } /* 모바일은 터치 고려 상시 연하게 노출 */
+      body { padding: 6px; }
+      h1 { font-size: 20px; margin: 8px 0 12px 0; }
+      .form-container { padding: 8px; gap: 6px; }
+      .form-row { flex-direction: column; gap: 6px; }
+      .form-row input, .form-row button { width: 100%; }
+      .inline-search { flex: none !important; width: 100%; }
+      .bookshelf-grid { grid-template-columns: repeat(5, 1fr); gap: 4px; }
+      .shelf-box { min-height: 60px; padding: 16px 2px 6px 2px; }
+      .shelf-title { font-size: 10px; }
+      .btn-shelf-opt { opacity: 0.7; font-size: 8px; }
     }
   </style>
 </head>
@@ -313,25 +306,22 @@
   <form id="siteForm" class="form-container" onsubmit="handleSubmit(event)">
     <input type="hidden" name="rowNum" id="rowNum">
     
-    <!-- 첫 번째 줄: 명칭 및 매체명 -->
+    <!-- 첫 번째 줄: 명칭 및 매체명 (힌트 문구 축소) -->
     <div class="form-row">
-      <input type="text" name="title" id="formTitle" placeholder="명칭 (예: 오디세이, 마나)" required>
-      <input type="text" name="description" placeholder="매체명 (예: 콜라이드리뷰)" required>
+      <input type="text" name="title" id="formTitle" placeholder="명칭" required>
+      <input type="text" name="description" placeholder="매체명" required>
     </div>
     
-    <!-- 두 번째 줄: 확장된 주소창 및 버튼 -->
+    <!-- 두 번째 줄: 주소창 + 등록/취소 버튼 + 한 줄 검색창 배치 -->
     <div class="form-row">
-      <input type="url" name="url" placeholder="주소 (https://...)" required style="flex: 1;">
+      <input type="url" name="url" placeholder="주소" required style="flex: 1.5;">
+      <input type="text" id="searchInput" class="inline-search" placeholder="검색어 입력..." oninput="renderData()">
       <button type="submit" class="btn-submit" id="submitBtn">등록</button>
       <button type="button" class="btn-cancel" style="display:none;" id="cancelBtn" onclick="resetForm()">취소</button>
     </div>
   </form>
 
-  <div class="search-container">
-    <input type="text" id="searchInput" placeholder="작품명이나 매체명으로 검색..." oninput="renderData()">
-  </div>
-
-  <!-- 한 줄에 3개 고정 그리드 서가 -->
+  <!-- 5열 고정 그리드 서가 -->
   <div class="bookshelf-grid" id="bookshelfGrid"></div>
 
   <div id="loadingText" class="loading" style="display: none;">데이터를 처리하는 중입니다...</div>
@@ -346,7 +336,6 @@
       <button type="button" class="btn-db-opt" onclick="backupData()">[백업하기]</button>
       <button type="button" class="btn-db-opt" onclick="triggerRestore()">[db복원]</button>
     </div>
-    <!-- 파일 오픈용 숨김 input -->
     <input type="file" id="dbFileInput" style="display:none;" accept=".txt" onchange="restoreData(event)">
   </div>
 </div>
@@ -362,7 +351,6 @@
     loadData();
   });
 
-  // 데이터 불러오기 (GET)
   function loadData() {
     showLoading(true);
     fetch(WEB_APP_URL)
@@ -380,27 +368,37 @@
       });
   }
 
-  // 중복 제거 및 정렬 로직이 포함된 서가 리스트 추출
+  // 중복 제거 및 최신 업데이트순(rowNum 내림차순) 정렬 로직 적용
   function extractTabsFromData() {
-    const uniqueTabs = new Set();
+    // 1. 각 서가(tab)별 가장 큰 rowNum(최신 업데이트)을 추적하기 위한 맵 생성
+    const tabLatestRowMap = new Map();
+
     allRawData.forEach(item => {
       const tName = item.tab || item.title;
       if (tName && tName.trim() !== '') {
-        uniqueTabs.add(tName.trim());
+        const key = tName.trim();
+        const currentMinMax = tabLatestRowMap.get(key) || 0;
+        const itemRowNum = parseInt(item.rowNum, 10) || 0;
+        // 가장 큰 rowNum이 최신 데이터임
+        if (itemRowNum > currentMinMax) {
+          tabLatestRowMap.set(key, itemRowNum);
+        }
       }
     });
 
-    // 기본 가나다/ABC 순으로 1차 정렬
-    let sortedTabs = Array.from(uniqueTabs).sort((a, b) => a.localeCompare(b, 'ko'));
+    // 2. 최신 등록 순서(rowNum 내림차순)로 1차 정렬
+    let sortedTabs = Array.from(tabLatestRowMap.keys()).sort((a, b) => {
+      return tabLatestRowMap.get(b) - tabLatestRowMap.get(a);
+    });
 
-    // 로컬스토리지에서 보관(S) 처리된 리스트 가져오기
+    // 3. 로컬스토리지에서 보관(S) 처리된 리스트 가져오기
     const archivedTabs = JSON.parse(localStorage.getItem('archivedTabs') || '[]');
 
-    // 일반 리스트와 보관 리스트 분리
+    // 4. 일반 리스트와 보관 리스트 분리
     const normalList = sortedTabs.filter(t => !archivedTabs.includes(t.toLowerCase()));
     const archivedList = sortedTabs.filter(t => archivedTabs.includes(t.toLowerCase()));
 
-    // 일반 리스트 다음에 보관 리스트가 오도록 최종 결합 (S기능: 최하단으로 이동)
+    // 5. 최종 결합 (일반 최신순 목록 순서대로 배치 후, 하단에 보관 목록 배치)
     tabList = [...normalList, ...archivedList];
 
     if (!currentTab || !tabList.map(t => t.toLowerCase()).includes(currentTab.toLowerCase())) {
@@ -408,7 +406,6 @@
     }
   }
 
-  // 박스형 서가 UI 렌더링 (구석 미니 버튼 적용)
   function renderShelfGrid() {
     const grid = document.getElementById('bookshelfGrid');
     grid.innerHTML = '';
@@ -420,16 +417,13 @@
       const isActive = activeName === currentTab.toLowerCase();
       const isArchived = archivedTabs.includes(activeName);
 
-      // 서가 박스 생성
       const box = document.createElement('div');
       box.className = `shelf-box ${isActive ? 'active' : ''} ${isArchived ? 'archived' : ''}`;
       box.onclick = () => selectShelf(activeName);
 
-      // 미니 컨트롤 기능 행 구석 배치 [S | D]
       const actionDiv = document.createElement('div');
       actionDiv.className = 'shelf-actions';
 
-      // S 버튼 (초소형 기호 표기)
       const sBtn = document.createElement('button');
       sBtn.className = 'btn-shelf-opt opt-s';
       sBtn.textContent = '⚙️';
@@ -439,7 +433,6 @@
         toggleArchiveTab(tabName);
       };
 
-      // D 버튼 (초소형 기호 표기)
       const dBtn = document.createElement('button');
       dBtn.className = 'btn-shelf-opt opt-d';
       dBtn.textContent = '❌';
@@ -453,7 +446,6 @@
       actionDiv.appendChild(dBtn);
       box.appendChild(actionDiv);
 
-      // 제목 추가
       const titleDiv = document.createElement('div');
       titleDiv.className = 'shelf-title';
       titleDiv.textContent = tabName;
@@ -474,7 +466,6 @@
     }
   }
 
-  // 선택된 서가의 매체 목록 렌더링 (가나다순 자동 정렬)
   function renderData() {
     const searchKeyword = document.getElementById('searchInput').value.toLowerCase();
     const contentArea = document.getElementById('bookshelfContent');
@@ -493,12 +484,8 @@
       return;
     }
 
-    // 매체 목록 가나다 / ABC 순(오름차순) 정렬 처리
-    filtered.sort((a, b) => {
-      const descA = a.description || '';
-      const descB = b.description || '';
-      return descA.localeCompare(descB, 'ko');
-    });
+    // 매체 내부 목록도 최신 등록순(rowNum 내림차순) 정렬 처리
+    filtered.sort((a, b) => (parseInt(b.rowNum, 10) || 0) - (parseInt(a.rowNum, 10) || 0));
 
     const activeTabObj = tabList.find(t => t.toLowerCase() === currentTab.toLowerCase()) || currentTab;
     const bookBox = document.createElement('div');
@@ -533,7 +520,6 @@
     contentArea.appendChild(bookBox);
   }
 
-  // 폼 등록 및 수정 (POST)
   function handleSubmit(e) {
     e.preventDefault();
     showLoading(true);
@@ -550,7 +536,6 @@
       url: formData.get('url')
     };
 
-    // [신규 등록/수정 시 중요]: 하단 보관함에 가있던 서가 명칭일 경우 상단 정렬로 자동 복원
     let archivedTabs = JSON.parse(localStorage.getItem('archivedTabs') || '[]');
     if (archivedTabs.includes(inputTitle.toLowerCase())) {
       archivedTabs = archivedTabs.filter(t => t !== inputTitle.toLowerCase());
@@ -573,7 +558,6 @@
     });
   }
 
-  // [수정] 버튼 클릭 시 입력 폼에 바인딩
   function startEdit(itemEscaped) {
     const item = JSON.parse(decodeURIComponent(itemEscaped));
     
@@ -588,7 +572,6 @@
     window.scrollTo({top: 0, behavior: 'smooth'});
   }
 
-  // 개별 매체 링크 단건 삭제
   function deleteItem(rowNum) {
     if(confirm("이 링크 항목을 정말 삭제하시겠습니까?")) {
       showLoading(true);
@@ -607,7 +590,6 @@
     }
   }
 
-  // [S] 기능 - 서가를 제일 하단 구역으로 즉시 이동 / 복원 시키는 토글 함수
   function toggleArchiveTab(tabName) {
     const key = tabName.toLowerCase();
     let archivedTabs = JSON.parse(localStorage.getItem('archivedTabs') || '[]');
@@ -624,7 +606,6 @@
     renderData();
   }
 
-  // [D] 기능 - 서가 전체 일괄 삭제
   function deleteEntireTab(tabName) {
     const targetsToDelete = allRawData.filter(item => {
       const itemTab = (item.tab || item.title || '').toLowerCase();
@@ -659,12 +640,10 @@
     }
   }
 
-  // 로딩바 관리
   function showLoading(isLoading) {
     document.getElementById('loadingText').style.display = isLoading ? 'block' : 'none';
   }
 
-  // 폼 입력 리셋
   function resetForm() {
     document.getElementById('rowNum').value = '';
     document.getElementById('siteForm').reset();
@@ -677,16 +656,12 @@
     }
   }
 
-  // ================= 기기간 공유 보완용 데이터 백업/복원 기능 =================
-
-  // [백업하기] 실행 함수
   function backupData() {
     if (allRawData.length === 0) {
       alert("백업할 데이터가 없습니다.");
       return;
     }
     
-    // 원본 데이터 배열과 로컬스토리지 보관 정보를 한 객체에 패키징
     const backupPackage = {
       timestamp: new Date().toISOString(),
       archivedTabs: localStorage.getItem('archivedTabs') || '[]',
@@ -706,13 +681,11 @@
     URL.revokeObjectURL(url);
   }
 
-  // [db복원] 버튼 트리거 함수
   function triggerRestore() {
     document.getElementById('dbFileInput').click();
   }
 
-  // [db복원] 실제 로직 수행 함수
-  function restoreData(event) {
+   tyranny function restoreData(event) {
     const file = event.target.files[0];
     if (!file) return;
 
@@ -728,17 +701,14 @@
       try {
         const parsed = JSON.parse(e.target.result);
         
-        // 정상 구조 유효성 검증
         if (!parsed.data || !Array.isArray(parsed.data)) {
           throw new Error("올바른 백업 파일 형식이 아닙니다.");
         }
 
-        // 로컬스토리지 정보 동기화 복원
         if (parsed.archivedTabs) {
           localStorage.setItem('archivedTabs', parsed.archivedTabs);
         }
 
-        // 앱스 스크립트로 통째 전송 처리 (action: "restore" 액션 호출 체계)
         fetch(WEB_APP_URL, {
           method: "POST",
           body: JSON.stringify({ action: "restore", items: parsed.data })
@@ -759,7 +729,7 @@
         alert("파일 처리 오류: " + err.message);
         showLoading(false);
       }
-      event.target.value = ''; // 초기화
+      event.target.value = '';
     };
     
     reader.readAsText(file);
