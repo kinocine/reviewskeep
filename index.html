@@ -88,8 +88,8 @@
 
     /* 주소창 옆으로 이동한 통합 검색창 스타일 */
     .inline-search {
-      flex: 1.2 !important; /* 주소창과 밸런스를 맞추기 위해 약간 더 넓게 할당 */
-      background-color: #fffde7 !important; /* 검색창임을 인지하도록 옅은 노란빛 감돌게 설정 */
+      flex: 1.2 !important;
+      background-color: #fffde7 !important;
       border-color: #fbc02d !important;
     }
 
@@ -283,14 +283,33 @@
       color: #333;
     }
 
-    /* 모바일 반응형 디자인 초소형 최적화 */
+    /* 모바일 반응형 디자인 모바일 최적화 수정 */
     @media (max-width: 600px) {
       body { padding: 6px; }
       h1 { font-size: 20px; margin: 8px 0 12px 0; }
       .form-container { padding: 8px; gap: 6px; }
-      .form-row { flex-direction: column; gap: 6px; }
-      .form-row input, .form-row button { width: 100%; }
-      .inline-search { flex: none !important; width: 100%; }
+      
+      /* 모바일에서 무조건 한 줄에 균등하게 2칸씩 배치되도록 wrap 처리 */
+      .form-row { 
+        flex-wrap: wrap; 
+        gap: 6px; 
+      }
+      .form-row input, .form-row button { 
+        flex: 1 1 calc(50% - 3px); /* 반 너비 할당 */
+        width: calc(50% - 3px);
+        box-sizing: border-box;
+      }
+      
+      /* 주소창이 취소버튼 활성화 유무에 상관없이 깨지지 않도록 강제 유연성 확보 */
+      .form-row input[name="url"] {
+        flex: 1 1 calc(50% - 3px) !important;
+        width: calc(50% - 3px) !important;
+      }
+      .inline-search { 
+        flex: 1 1 calc(50% - 3px) !important; 
+        width: calc(50% - 3px) !important;
+      }
+
       .bookshelf-grid { grid-template-columns: repeat(5, 1fr); gap: 4px; }
       .shelf-box { min-height: 60px; padding: 16px 2px 6px 2px; }
       .shelf-title { font-size: 10px; }
@@ -306,16 +325,20 @@
   <form id="siteForm" class="form-container" onsubmit="handleSubmit(event)">
     <input type="hidden" name="rowNum" id="rowNum">
     
-    <!-- 첫 번째 줄: 명칭 및 매체명 (힌트 문구 축소) -->
+    <!-- 첫 번째 줄: 명칭 및 매체명 -->
     <div class="form-row">
       <input type="text" name="title" id="formTitle" placeholder="명칭" required>
       <input type="text" name="description" placeholder="매체명" required>
     </div>
     
-    <!-- 두 번째 줄: 주소창 + 등록/취소 버튼 + 한 줄 검색창 배치 -->
+    <!-- 두 번째 줄: 주소창 + 한 줄 검색창 -->
     <div class="form-row">
-      <input type="url" name="url" placeholder="주소" required style="flex: 1.5;">
+      <input type="url" name="url" placeholder="주소" required>
       <input type="text" id="searchInput" class="inline-search" placeholder="검색어 입력..." oninput="renderData()">
+    </div>
+
+    <!-- 세 번째 줄: 등록 및 취소 버튼 (모바일 화면 레이아웃 정렬을 위해 줄 분리 및 배치 안정화) -->
+    <div class="form-row">
       <button type="submit" class="btn-submit" id="submitBtn">등록</button>
       <button type="button" class="btn-cancel" style="display:none;" id="cancelBtn" onclick="resetForm()">취소</button>
     </div>
@@ -368,9 +391,7 @@
       });
   }
 
-  // 중복 제거 및 최신 업데이트순(rowNum 내림차순) 정렬 로직 적용
   function extractTabsFromData() {
-    // 1. 각 서가(tab)별 가장 큰 rowNum(최신 업데이트)을 추적하기 위한 맵 생성
     const tabLatestRowMap = new Map();
 
     allRawData.forEach(item => {
@@ -379,26 +400,21 @@
         const key = tName.trim();
         const currentMinMax = tabLatestRowMap.get(key) || 0;
         const itemRowNum = parseInt(item.rowNum, 10) || 0;
-        // 가장 큰 rowNum이 최신 데이터임
         if (itemRowNum > currentMinMax) {
           tabLatestRowMap.set(key, itemRowNum);
         }
       }
     });
 
-    // 2. 최신 등록 순서(rowNum 내림차순)로 1차 정렬
     let sortedTabs = Array.from(tabLatestRowMap.keys()).sort((a, b) => {
       return tabLatestRowMap.get(b) - tabLatestRowMap.get(a);
     });
 
-    // 3. 로컬스토리지에서 보관(S) 처리된 리스트 가져오기
     const archivedTabs = JSON.parse(localStorage.getItem('archivedTabs') || '[]');
 
-    // 4. 일반 리스트와 보관 리스트 분리
     const normalList = sortedTabs.filter(t => !archivedTabs.includes(t.toLowerCase()));
     const archivedList = sortedTabs.filter(t => archivedTabs.includes(t.toLowerCase()));
 
-    // 5. 최종 결합 (일반 최신순 목록 순서대로 배치 후, 하단에 보관 목록 배치)
     tabList = [...normalList, ...archivedList];
 
     if (!currentTab || !tabList.map(t => t.toLowerCase()).includes(currentTab.toLowerCase())) {
@@ -484,7 +500,6 @@
       return;
     }
 
-    // 매체 내부 목록도 최신 등록순(rowNum 내림차순) 정렬 처리
     filtered.sort((a, b) => (parseInt(b.rowNum, 10) || 0) - (parseInt(a.rowNum, 10) || 0));
 
     const activeTabObj = tabList.find(t => t.toLowerCase() === currentTab.toLowerCase()) || currentTab;
@@ -685,7 +700,7 @@
     document.getElementById('dbFileInput').click();
   }
 
-   tyranny function restoreData(event) {
+  function restoreData(event) {
     const file = event.target.files[0];
     if (!file) return;
 
