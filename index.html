@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -17,16 +20,30 @@
       max-width: 1000px;
       margin: 0 auto;
     }
-    h1 {
+    .header-title {
       text-align: center;
       color: #1a73e8;
       margin: 10px 0 15px 0;
       font-size: 26px;
       font-weight: 700;
       letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .star-btn {
+      cursor: pointer;
+      font-size: 24px;
+      color: #fbbc04;
+      user-select: none;
+      transition: transform 0.2s;
+    }
+    .star-btn:hover {
+      transform: scale(1.2);
     }
 
-    /* 개선된 폼 레이아웃 */
+    /* 폼 레이아웃 */
     .form-container {
       background: white;
       padding: 12px;
@@ -69,10 +86,6 @@
       border-radius: 6px;
       font-size: 13px;
       flex-shrink: 0;
-      transition: background 0.2s;
-    }
-    .btn-submit:hover {
-      background-color: #1557b0;
     }
     .btn-cancel {
       background-color: #e0e0e0;
@@ -86,14 +99,13 @@
       flex-shrink: 0;
     }
 
-    /* 주소창 옆으로 이동한 통합 검색창 스타일 */
     .inline-search {
       flex: 1.2 !important;
       background-color: #fffde7 !important;
       border-color: #fbc02d !important;
     }
 
-    /* 서가(Grid) 레이아웃 - 무조건 한 줄에 5개 고정 */
+    /* 서가 Grid */
     .bookshelf-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -120,19 +132,10 @@
     .shelf-box:hover {
       border-color: #1a73e8;
       transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
     .shelf-box.active {
       background-color: #e8f0fe;
       border-color: #1a73e8;
-    }
-    .shelf-box.archived {
-      background-color: #f5f5f5;
-      border-color: #e0e0e0;
-      opacity: 0.65;
-    }
-    .shelf-box.archived:hover {
-      opacity: 1;
     }
     .shelf-title {
       font-size: 12px;
@@ -141,37 +144,9 @@
       word-break: break-all;
       line-height: 1.3;
     }
-    .shelf-box.active .shelf-title {
-      color: #1a73e8;
-    }
-    
-    /* 서가 구석 미니 버튼 [S | D] */
-    .shelf-actions {
-      position: absolute;
-      top: 3px;
-      right: 3px;
-      display: flex;
-      gap: 2px;
-    }
-    .btn-shelf-opt {
-      border: none;
-      background: none;
-      font-size: 9px;
-      font-weight: bold;
-      cursor: pointer;
-      padding: 1px 3px;
-      border-radius: 3px;
-      opacity: 0.4;
-      transition: opacity 0.2s;
-    }
-    .shelf-box:hover .btn-shelf-opt {
-      opacity: 1;
-    }
-    .btn-shelf-opt.opt-s { color: #188038; }
-    .btn-shelf-opt.opt-d { color: #d93025; }
-    .btn-shelf-opt:hover { background: rgba(0,0,0,0.05); }
+    .shelf-box.active .shelf-title { color: #1a73e8; }
 
-    /* 서가 내용 리스트 출력 공간 */
+    /* 작품 타이틀 헤더 영역 (저장 버턴 위치) */
     .bookshelf-content {
       display: grid;
       grid-template-columns: 1fr;
@@ -184,16 +159,34 @@
       padding: 12px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
-    .book-title {
-      font-size: 15px;
-      font-weight: bold;
-      color: #1a73e8;
+    .book-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       padding-bottom: 8px;
       border-bottom: 1px solid #f1f3f4;
       margin-bottom: 10px;
     }
+    .book-title {
+      font-size: 16px;
+      font-weight: bold;
+      color: #1a73e8;
+    }
+    .btn-tab-archive {
+      background-color: #188038;
+      color: white;
+      border: none;
+      font-weight: bold;
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .btn-tab-archive:hover {
+      background-color: #137333;
+    }
 
-    /* 내부 매체 리스트 */
+    /* 내부 리스트 */
     .sub-item {
       background: #f8f9fa;
       padding: 8px 10px;
@@ -213,31 +206,25 @@
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-    .sub-item-link-wrap a {
-      color: #1a73e8;
-      text-decoration: none;
-    }
-    .sub-item-link-wrap a:hover {
-      text-decoration: underline;
-    }
+    .sub-item-link-wrap a { color: #1a73e8; text-decoration: none; }
+    .sub-item-link-wrap a:hover { text-decoration: underline; }
 
     .sub-actions {
       display: flex;
-      gap: 6px;
+      gap: 4px;
       flex-shrink: 0;
     }
     .btn-action {
       border: none;
-      background: none;
+      background: #e8f0fe;
       cursor: pointer;
       font-weight: bold;
-      font-size: 15px;
-      padding: 2px 4px;
+      font-size: 11px;
+      padding: 3px 6px;
       border-radius: 4px;
     }
     .btn-edit { color: #1a73e8; }
-    .btn-delete { color: #d93025; }
-    .btn-edit:hover, .btn-delete:hover { background: #e8f0fe; }
+    .btn-delete { color: #d93025; background: #fce8e6; }
     
     .loading {
       text-align: center;
@@ -246,129 +233,93 @@
       color: #666;
     }
 
-    /* 하단 데이터 관리 구역 */
-    .db-management-zone {
-      margin-top: 30px;
-      margin-bottom: 15px;
-      padding: 12px;
-      background: #eaeded;
-      border-radius: 10px;
-      border: 1px dashed #bdc3c7;
-      text-align: center;
-    }
-    .db-management-title {
-      font-size: 11px;
-      color: #7f8c8d;
-      margin-bottom: 8px;
-      font-weight: bold;
-    }
-    .db-btn-group {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-    }
-    .btn-db-opt {
-      padding: 6px 12px;
-      font-size: 11px;
-      font-weight: bold;
-      border: 1px solid #bdc3c7;
-      border-radius: 6px;
+    /* 분류 보관함 전용 페이지 디자인 */
+    .archive-category-block {
       background: white;
-      cursor: pointer;
-      color: #555;
-      transition: background 0.2s;
+      border: 1px solid #dadce0;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
     }
-    .btn-db-opt:hover {
-      background: #f2f4f4;
-      color: #333;
+    .archive-category-header {
+      font-size: 15px;
+      font-weight: bold;
+      color: #188038;
+      margin-bottom: 10px;
+      border-bottom: 2px solid #e6f4ea;
+      padding-bottom: 4px;
+    }
+    .archive-work-title {
+      font-weight: bold;
+      color: #1a73e8;
+      margin-top: 8px;
+      margin-bottom: 4px;
+      font-size: 13px;
     }
 
-    /* 모바일 반응형 디자인 모바일 최적화 수정 */
     @media (max-width: 600px) {
       body { padding: 6px; }
-      h1 { font-size: 20px; margin: 8px 0 12px 0; }
+      .header-title { font-size: 20px; }
       .form-container { padding: 8px; gap: 6px; }
-      
-      /* 모바일에서 무조건 한 줄에 균등하게 2칸씩 배치되도록 wrap 처리 */
-      .form-row { 
-        flex-wrap: wrap; 
-        gap: 6px; 
-      }
-      .form-row input, .form-row button { 
-        flex: 1 1 calc(50% - 3px); /* 반 너비 할당 */
-        width: calc(50% - 3px);
-        box-sizing: border-box;
-      }
-      
-      /* 주소창이 취소버튼 활성화 유무에 상관없이 깨지지 않도록 강제 유연성 확보 */
-      .form-row input[name="url"] {
-        flex: 1 1 calc(50% - 3px) !important;
-        width: calc(50% - 3px) !important;
-      }
-      .inline-search { 
-        flex: 1 1 calc(50% - 3px) !important; 
-        width: calc(50% - 3px) !important;
-      }
-
+      .form-row { flex-wrap: wrap; gap: 6px; }
+      .form-row input, .form-row button { flex: 1 1 calc(50% - 3px); width: calc(50% - 3px); }
       .bookshelf-grid { grid-template-columns: repeat(5, 1fr); gap: 4px; }
       .shelf-box { min-height: 60px; padding: 16px 2px 6px 2px; }
       .shelf-title { font-size: 10px; }
-      .btn-shelf-opt { opacity: 0.7; font-size: 8px; }
     }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <h1>Cinematic Perspective</h1>
-  
-  <form id="siteForm" class="form-container" onsubmit="handleSubmit(event)">
-    <input type="hidden" name="rowNum" id="rowNum">
-    
-    <!-- 첫 번째 줄: 명칭 및 매체명 -->
-    <div class="form-row">
-      <input type="text" name="title" id="formTitle" placeholder="명칭" required>
-      <input type="text" name="description" placeholder="매체명" required>
-    </div>
-    
-    <!-- 두 번째 줄: 주소창 + 한 줄 검색창 -->
-    <div class="form-row">
-      <input type="url" name="url" placeholder="주소" required>
-      <input type="text" id="searchInput" class="inline-search" placeholder="검색어 입력..." oninput="renderData()">
-    </div>
+  <div class="header-title">
+    <span id="pageTitle">Cinematic Perspective</span>
+    <span class="star-btn" onclick="toggleArchiveView()" title="분류 보관함 열기/닫기">★</span>
+  </div>
 
-    <!-- 세 번째 줄: 등록 및 취소 버튼 (모바일 화면 레이아웃 정렬을 위해 줄 분리 및 배치 안정화) -->
-    <div class="form-row">
-      <button type="submit" class="btn-submit" id="submitBtn">등록</button>
-      <button type="button" class="btn-cancel" style="display:none;" id="cancelBtn" onclick="resetForm()">취소</button>
-    </div>
-  </form>
+  <!-- 메인 화면 -->
+  <div id="mainView">
+    <form id="siteForm" class="form-container" onsubmit="handleSubmit(event)">
+      <input type="hidden" name="rowNum" id="rowNum">
+      
+      <div class="form-row">
+        <input type="text" name="title" id="formTitle" placeholder="명칭" required>
+        <input type="text" name="description" placeholder="매체명" required>
+      </div>
+      
+      <div class="form-row">
+        <input type="url" name="url" placeholder="주소" required>
+        <input type="text" id="searchInput" class="inline-search" placeholder="검색어 입력..." oninput="renderData()">
+      </div>
 
-  <!-- 5열 고정 그리드 서가 -->
-  <div class="bookshelf-grid" id="bookshelfGrid"></div>
+      <div class="form-row">
+        <button type="submit" class="btn-submit" id="submitBtn">등록</button>
+        <button type="button" class="btn-cancel" style="display:none;" id="cancelBtn" onclick="resetForm()">취소</button>
+      </div>
+    </form>
+
+    <div class="bookshelf-grid" id="bookshelfGrid"></div>
+    <div class="bookshelf-content" id="bookshelfContent"></div>
+  </div>
+
+  <!-- 분류 보관함 전용 페이지 (★ 클릭 시 이동) -->
+  <div id="archiveView" style="display: none;">
+    <div style="background: #e6f4ea; padding: 10px; border-radius: 8px; margin-bottom: 12px; font-weight: bold; color: #137333;">
+      📁 분류별 보관함 (★ 클릭 시 돌아가기)
+    </div>
+    <div id="archiveContent"></div>
+  </div>
 
   <div id="loadingText" class="loading" style="display: none;">데이터를 처리하는 중입니다...</div>
-
-  <!-- 선택된 서가 목록 출력 -->
-  <div class="bookshelf-content" id="bookshelfContent"></div>
-
-  <!-- 하단 데이터 동기화/백업 관리 영역 -->
-  <div class="db-management-zone">
-    <div class="db-management-title">기기간 데이터 이동 관리 (로컬 백업/복원)</div>
-    <div class="db-btn-group">
-      <button type="button" class="btn-db-opt" onclick="backupData()">[백업하기]</button>
-      <button type="button" class="btn-db-opt" onclick="triggerRestore()">[db복원]</button>
-    </div>
-    <input type="file" id="dbFileInput" style="display:none;" accept=".txt" onchange="restoreData(event)">
-  </div>
 </div>
 
 <script>
-  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwQo4oZBYolM6FxpVORSJjWqWdUkMQP0POXd6HrkoWrg6BVmIdCEQ23vOUp98HXKMdrow/exec";
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyAvaxuzMmqCCwdwqghH3yeddayOWu7U0NOybrLZicmoYmX83yxOWpNScLrInjPSNPY/exec";
   
   let allRawData = [];
   let tabList = []; 
   let currentTab = ''; 
+  let isArchiveMode = false;
 
   window.addEventListener('DOMContentLoaded', () => {
     loadData();
@@ -393,29 +344,18 @@
 
   function extractTabsFromData() {
     const tabLatestRowMap = new Map();
-
     allRawData.forEach(item => {
       const tName = item.tab || item.title;
       if (tName && tName.trim() !== '') {
         const key = tName.trim();
         const currentMinMax = tabLatestRowMap.get(key) || 0;
         const itemRowNum = parseInt(item.rowNum, 10) || 0;
-        if (itemRowNum > currentMinMax) {
-          tabLatestRowMap.set(key, itemRowNum);
-        }
+        if (itemRowNum > currentMinMax) tabLatestRowMap.set(key, itemRowNum);
       }
     });
 
-    let sortedTabs = Array.from(tabLatestRowMap.keys()).sort((a, b) => {
-      return tabLatestRowMap.get(b) - tabLatestRowMap.get(a);
-    });
-
-    const archivedTabs = JSON.parse(localStorage.getItem('archivedTabs') || '[]');
-
-    const normalList = sortedTabs.filter(t => !archivedTabs.includes(t.toLowerCase()));
-    const archivedList = sortedTabs.filter(t => archivedTabs.includes(t.toLowerCase()));
-
-    tabList = [...normalList, ...archivedList];
+    let sortedTabs = Array.from(tabLatestRowMap.keys()).sort((a, b) => tabLatestRowMap.get(b) - tabLatestRowMap.get(a));
+    tabList = sortedTabs;
 
     if (!currentTab || !tabList.map(t => t.toLowerCase()).includes(currentTab.toLowerCase())) {
       currentTab = tabList[0] ? tabList[0].toLowerCase() : '';
@@ -426,41 +366,13 @@
     const grid = document.getElementById('bookshelfGrid');
     grid.innerHTML = '';
 
-    const archivedTabs = JSON.parse(localStorage.getItem('archivedTabs') || '[]');
-
     tabList.forEach(tabName => {
       const activeName = tabName.trim().toLowerCase();
       const isActive = activeName === currentTab.toLowerCase();
-      const isArchived = archivedTabs.includes(activeName);
 
       const box = document.createElement('div');
-      box.className = `shelf-box ${isActive ? 'active' : ''} ${isArchived ? 'archived' : ''}`;
+      box.className = `shelf-box ${isActive ? 'active' : ''}`;
       box.onclick = () => selectShelf(activeName);
-
-      const actionDiv = document.createElement('div');
-      actionDiv.className = 'shelf-actions';
-
-      const sBtn = document.createElement('button');
-      sBtn.className = 'btn-shelf-opt opt-s';
-      sBtn.textContent = '⚙️';
-      sBtn.title = isArchived ? '상단 정렬로 복원' : '제일 하단 보관함으로 이동';
-      sBtn.onclick = (e) => {
-        e.stopPropagation();
-        toggleArchiveTab(tabName);
-      };
-
-      const dBtn = document.createElement('button');
-      dBtn.className = 'btn-shelf-opt opt-d';
-      dBtn.textContent = '❌';
-      dBtn.title = `"${tabName}" 서가 전체 삭제`;
-      dBtn.onclick = (e) => {
-        e.stopPropagation();
-        deleteEntireTab(tabName);
-      };
-
-      actionDiv.appendChild(sBtn);
-      actionDiv.appendChild(dBtn);
-      box.appendChild(actionDiv);
 
       const titleDiv = document.createElement('div');
       titleDiv.className = 'shelf-title';
@@ -475,11 +387,6 @@
     currentTab = tabName;
     renderShelfGrid();
     renderData();
-    
-    const targetTabObj = tabList.find(t => t.toLowerCase() === currentTab.toLowerCase());
-    if (targetTabObj) {
-      document.getElementById('formTitle').value = targetTabObj;
-    }
   }
 
   function renderData() {
@@ -496,26 +403,38 @@
     });
 
     if (filtered.length === 0) {
-      contentArea.innerHTML = `<div style="padding: 20px; text-align: center; color: #888;">등록된 매체가 없습니다. 새로운 매체를 추가해 보세요!</div>`;
+      contentArea.innerHTML = `<div style="padding: 20px; text-align: center; color: #888;">등록된 매체가 없습니다.</div>`;
       return;
     }
 
     filtered.sort((a, b) => (parseInt(b.rowNum, 10) || 0) - (parseInt(a.rowNum, 10) || 0));
-
     const activeTabObj = tabList.find(t => t.toLowerCase() === currentTab.toLowerCase()) || currentTab;
+
     const bookBox = document.createElement('div');
     bookBox.className = 'book-box';
+
+    // 작품 헤더 (작품명 + [저장] 버턴)
+    const bookHeaderDiv = document.createElement('div');
+    bookHeaderDiv.className = 'book-header';
 
     const bookTitleDiv = document.createElement('div');
     bookTitleDiv.className = 'book-title';
     bookTitleDiv.innerText = activeTabObj;
+
+    const archiveBtn = document.createElement('button');
+    archiveBtn.className = 'btn-tab-archive';
+    archiveBtn.innerText = '[저장]';
+    archiveBtn.title = '이 작품 전체를 분류 보관함으로 이동';
+    archiveBtn.onclick = () => archiveEntireTab(activeTabObj);
+
+    bookHeaderDiv.appendChild(bookTitleDiv);
+    bookHeaderDiv.appendChild(archiveBtn);
 
     const bookContentsDiv = document.createElement('div');
 
     filtered.forEach(item => {
       const subItem = document.createElement('div');
       subItem.className = 'sub-item';
-      
       const itemEscaped = encodeURIComponent(JSON.stringify(item));
       
       subItem.innerHTML = `
@@ -523,22 +442,120 @@
           <a href="${item.url}" target="_blank" title="${item.url}">${item.description}</a>
         </div>
         <div class="sub-actions">
-          <button type="button" class="btn-action btn-edit" title="수정" onclick="startEdit('${itemEscaped}')">[+]</button>
-          <button type="button" class="btn-action btn-delete" title="삭제" onclick="deleteItem('${item.rowNum}')">[-]</button>
+          <button type="button" class="btn-action btn-edit" title="수정" onclick="startEdit('${itemEscaped}')">수정</button>
+          <button type="button" class="btn-action btn-delete" title="삭제" onclick="deleteItem('${item.rowNum}')">삭제</button>
         </div>
       `;
       bookContentsDiv.appendChild(subItem);
     });
 
-    bookBox.appendChild(bookTitleDiv);
+    bookBox.appendChild(bookHeaderDiv);
     bookBox.appendChild(bookContentsDiv);
     contentArea.appendChild(bookBox);
+  }
+
+  /* 작품 전체 보관함으로 넘기기 */
+  function archiveEntireTab(tabName) {
+    const category = prompt(`"${tabName}" 전체 작품을 이동할 분류명을 입력하세요:\n(예: 미국영화.2026, 올해 개봉작, 넷플릭스 등)`, "미국영화.2026");
+    if (!category || !category.trim()) return;
+
+    showLoading(true);
+    fetch(WEB_APP_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: "archiveTab", tabName: tabName, category: category.trim() })
+    })
+    .then(res => res.json())
+    .then(() => {
+      currentTab = '';
+      loadData();
+    })
+    .catch(err => {
+      console.error("작품 보관 처리 실패:", err);
+      showLoading(false);
+    });
+  }
+
+  /* 별표(★) 토글 */
+  function toggleArchiveView() {
+    isArchiveMode = !isArchiveMode;
+    const mainView = document.getElementById('mainView');
+    const archiveView = document.getElementById('archiveView');
+
+    if (isArchiveMode) {
+      mainView.style.display = 'none';
+      archiveView.style.display = 'block';
+      loadArchiveData();
+    } else {
+      mainView.style.display = 'block';
+      archiveView.style.display = 'none';
+    }
+  }
+
+  /* 보관함 데이터 조회 및 렌더링 */
+  function loadArchiveData() {
+    showLoading(true);
+    fetch(WEB_APP_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: "getArchived" })
+    })
+    .then(res => res.json())
+    .then(data => {
+      renderArchiveView(data);
+      showLoading(false);
+    })
+    .catch(err => {
+      console.error("보관 데이터 로드 실패:", err);
+      showLoading(false);
+    });
+  }
+
+  function renderArchiveView(data) {
+    const container = document.getElementById('archiveContent');
+    container.innerHTML = '';
+
+    if (!data || data.length === 0) {
+      container.innerHTML = `<div style="padding: 20px; text-align: center; color: #888;">보관된 분류 항목이 없습니다.</div>`;
+      return;
+    }
+
+    // Category > WorkTitle 구조로 데이터 그룹화
+    const grouped = {};
+    data.forEach(item => {
+      const cat = item.category || "기타 보관";
+      const work = item.workTitle || "미지정 작품";
+      
+      if (!grouped[cat]) grouped[cat] = {};
+      if (!grouped[cat][work]) grouped[cat][work] = [];
+      grouped[cat][work].push(item);
+    });
+
+    for (const [category, works] of Object.entries(grouped)) {
+      const block = document.createElement('div');
+      block.className = 'archive-category-block';
+
+      let html = `<div class="archive-category-header">[${category}]</div>`;
+
+      for (const [workTitle, items] of Object.entries(works)) {
+        html += `<div class="archive-work-title">🎬 ${workTitle}</div>`;
+        items.forEach(it => {
+          html += `
+            <div class="sub-item">
+              <div class="sub-item-link-wrap">
+                <a href="${it.url}" target="_blank">${it.description}</a>
+              </div>
+            </div>
+          `;
+        });
+      }
+
+      block.innerHTML = html;
+      container.appendChild(block);
+    }
   }
 
   function handleSubmit(e) {
     e.preventDefault();
     showLoading(true);
-    
     const form = document.getElementById('siteForm');
     const formData = new FormData(form);
     const inputTitle = formData.get('title').trim();
@@ -551,17 +568,11 @@
       url: formData.get('url')
     };
 
-    let archivedTabs = JSON.parse(localStorage.getItem('archivedTabs') || '[]');
-    if (archivedTabs.includes(inputTitle.toLowerCase())) {
-      archivedTabs = archivedTabs.filter(t => t !== inputTitle.toLowerCase());
-      localStorage.setItem('archivedTabs', JSON.stringify(archivedTabs));
-    }
-
     fetch(WEB_APP_URL, {
       method: "POST",
       body: JSON.stringify({ action: "save", item: item })
     })
-    .then(response => response.json())
+    .then(res => res.json())
     .then(() => {
       currentTab = inputTitle.toLowerCase();
       resetForm();
@@ -575,7 +586,6 @@
 
   function startEdit(itemEscaped) {
     const item = JSON.parse(decodeURIComponent(itemEscaped));
-    
     document.getElementById('rowNum').value = item.rowNum;
     const form = document.getElementById('siteForm');
     form.elements['title'].value = item.tab || item.title;
@@ -594,64 +604,12 @@
         method: "POST",
         body: JSON.stringify({ action: "delete", rowNum: rowNum })
       })
-      .then(response => response.json())
-      .then(() => {
-        loadData();
-      })
+      .then(res => res.json())
+      .then(() => loadData())
       .catch(err => {
         console.error("삭제 실패:", err);
         showLoading(false);
       });
-    }
-  }
-
-  function toggleArchiveTab(tabName) {
-    const key = tabName.toLowerCase();
-    let archivedTabs = JSON.parse(localStorage.getItem('archivedTabs') || '[]');
-
-    if (archivedTabs.includes(key)) {
-      archivedTabs = archivedTabs.filter(t => t !== key);
-    } else {
-      archivedTabs.push(key);
-    }
-
-    localStorage.setItem('archivedTabs', JSON.stringify(archivedTabs));
-    extractTabsFromData();
-    renderShelfGrid();
-    renderData();
-  }
-
-  function deleteEntireTab(tabName) {
-    const targetsToDelete = allRawData.filter(item => {
-      const itemTab = (item.tab || item.title || '').toLowerCase();
-      return itemTab === tabName.toLowerCase();
-    });
-
-    if (targetsToDelete.length === 0) return;
-
-    if(confirm(`"${tabName}" 서가와 내부에 등록된 모든 주소(${targetsToDelete.length}개)를 통째로 삭제하시겠습니까?`)) {
-      showLoading(true);
-      
-      const deletePromises = targetsToDelete.map(item => {
-        return fetch(WEB_APP_URL, {
-          method: "POST",
-          body: JSON.stringify({ action: "delete", rowNum: item.rowNum })
-        });
-      });
-
-      Promise.all(deletePromises)
-        .then(() => {
-          let archivedTabs = JSON.parse(localStorage.getItem('archivedTabs') || '[]');
-          archivedTabs = archivedTabs.filter(t => t !== tabName.toLowerCase());
-          localStorage.setItem('archivedTabs', JSON.stringify(archivedTabs));
-
-          currentTab = '';
-          loadData();
-        })
-        .catch(err => {
-          console.error("서가 전체 삭제 실패:", err);
-          showLoading(false);
-        });
     }
   }
 
@@ -664,90 +622,6 @@
     document.getElementById('siteForm').reset();
     document.getElementById('submitBtn').innerText = '등록';
     document.getElementById('cancelBtn').style.display = 'none';
-    
-    const targetTabObj = tabList.find(t => t.toLowerCase() === currentTab.toLowerCase());
-    if (targetTabObj) {
-      document.getElementById('formTitle').value = targetTabObj;
-    }
-  }
-
-  function backupData() {
-    if (allRawData.length === 0) {
-      alert("백업할 데이터가 없습니다.");
-      return;
-    }
-    
-    const backupPackage = {
-      timestamp: new Date().toISOString(),
-      archivedTabs: localStorage.getItem('archivedTabs') || '[]',
-      data: allRawData
-    };
-    
-    const jsonString = JSON.stringify(backupPackage, null, 2);
-    const blob = new Blob([jsonString], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "cinematic_perspective_backup.txt";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  }
-
-  function triggerRestore() {
-    document.getElementById('dbFileInput').click();
-  }
-
-  function restoreData(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    if (!confirm("가져온 백업 데이터로 구글 시트의 전체 DB를 업데이트 하시겠습니까?\n이 작업은 구글 서버의 시트 데이터를 완전히 동기화합니다.")) {
-      event.target.value = '';
-      return;
-    }
-
-    showLoading(true);
-    const reader = new FileReader();
-    
-    reader.onload = function(e) {
-      try {
-        const parsed = JSON.parse(e.target.result);
-        
-        if (!parsed.data || !Array.isArray(parsed.data)) {
-          throw new Error("올바른 백업 파일 형식이 아닙니다.");
-        }
-
-        if (parsed.archivedTabs) {
-          localStorage.setItem('archivedTabs', parsed.archivedTabs);
-        }
-
-        fetch(WEB_APP_URL, {
-          method: "POST",
-          body: JSON.stringify({ action: "restore", items: parsed.data })
-        })
-        .then(response => response.json())
-        .then(res => {
-          alert("성공적으로 데이터베이스가 전체 동기화/복원되었습니다.");
-          currentTab = '';
-          loadData();
-        })
-        .catch(err => {
-          console.error("복원 전송 실패:", err);
-          alert("서버 전송 중 오류가 발생했습니다. Apps Script 설정을 확인하세요.");
-          showLoading(false);
-        });
-
-      } catch (err) {
-        alert("파일 처리 오류: " + err.message);
-        showLoading(false);
-      }
-      event.target.value = '';
-    };
-    
-    reader.readAsText(file);
   }
 </script>
 
