@@ -30,16 +30,15 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: 6px;
     }
-    .star-btn {
+    .nav-icon-btn {
       cursor: pointer;
-      font-size: 24px;
-      color: #fbbc04;
+      font-size: 22px;
       user-select: none;
       transition: transform 0.2s;
     }
-    .star-btn:hover {
+    .nav-icon-btn:hover {
       transform: scale(1.2);
     }
 
@@ -146,7 +145,7 @@
     }
     .shelf-box.active .shelf-title { color: #1a73e8; }
 
-    /* 작품 타이틀 헤더 영역 (저장 버턴 위치) */
+    /* 콘텐츠 헤더 */
     .bookshelf-content {
       display: grid;
       grid-template-columns: 1fr;
@@ -186,7 +185,7 @@
       background-color: #137333;
     }
 
-    /* 내부 리스트 */
+    /* 매체 리스트 항목 */
     .sub-item {
       background: #f8f9fa;
       padding: 8px 10px;
@@ -233,28 +232,96 @@
       color: #666;
     }
 
-    /* 분류 보관함 전용 페이지 디자인 */
-    .archive-category-block {
+    /* 보관함(★🌸) 탭 & 아코디언 스타일 */
+    .archive-category-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+      border-bottom: 2px solid #ceead6;
+    }
+    .archive-tab-item {
+      display: inline-flex;
+      align-items: center;
+      background: #fff;
+      border: 1px solid #ceead6;
+      border-radius: 20px;
+      padding: 3px 8px 3px 12px;
+      gap: 4px;
+    }
+    .archive-tab-item.active {
+      background: #e6f4ea;
+      border-color: #188038;
+    }
+    .archive-tab-label {
+      font-size: 13px;
+      font-weight: bold;
+      color: #137333;
+      cursor: pointer;
+    }
+    .archive-tab-item.active .archive-tab-label {
+      color: #188038;
+    }
+    .btn-order {
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: 11px;
+      color: #7f8c8d;
+      padding: 0 2px;
+      font-weight: bold;
+    }
+    .btn-order:hover {
+      color: #1a73e8;
+    }
+
+    /* 아코디언 */
+    .archive-accordion-item {
       background: white;
       border: 1px solid #dadce0;
       border-radius: 8px;
-      padding: 12px;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
     }
-    .archive-category-header {
-      font-size: 15px;
-      font-weight: bold;
-      color: #188038;
-      margin-bottom: 10px;
-      border-bottom: 2px solid #e6f4ea;
-      padding-bottom: 4px;
-    }
-    .archive-work-title {
+    .archive-accordion-header {
+      background: #fff;
+      padding: 10px 14px;
       font-weight: bold;
       color: #1a73e8;
-      margin-top: 8px;
-      margin-bottom: 4px;
-      font-size: 13px;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+    .archive-accordion-header:hover {
+      background: #f8f9fa;
+    }
+    .btn-restore-work {
+      background-color: #1a73e8;
+      color: white;
+      border: none;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 3px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .btn-restore-work:hover {
+      background-color: #1557b0;
+    }
+
+    .archive-accordion-body {
+      padding: 10px;
+      display: none;
+      border-top: 1px solid #f1f3f4;
+      background: #fafafa;
+    }
+    .archive-accordion-body.open {
+      display: block;
     }
 
     @media (max-width: 600px) {
@@ -274,7 +341,8 @@
 <div class="container">
   <div class="header-title">
     <span id="pageTitle">Cinematic Perspective</span>
-    <span class="star-btn" onclick="toggleArchiveView()" title="분류 보관함 열기/닫기">★</span>
+    <span class="nav-icon-btn" onclick="toggleArchiveView()" title="분류 보관함 열기/닫기">★</span>
+    <span class="nav-icon-btn" onclick="toggleArchiveView()" title="분류 보관함 열기/닫기">🌸</span>
   </div>
 
   <!-- 메인 화면 -->
@@ -302,11 +370,13 @@
     <div class="bookshelf-content" id="bookshelfContent"></div>
   </div>
 
-  <!-- 분류 보관함 전용 페이지 (★ 클릭 시 이동) -->
+  <!-- 분류 보관함 전용 페이지 (★, 🌸 클릭 시 이동) -->
   <div id="archiveView" style="display: none;">
     <div style="background: #e6f4ea; padding: 10px; border-radius: 8px; margin-bottom: 12px; font-weight: bold; color: #137333;">
-      📁 분류별 보관함 (★ 클릭 시 돌아가기)
+      📁 분류별 보관함 (★, 🌸 클릭 시 메인으로 돌아가기)
     </div>
+    
+    <div class="archive-category-tabs" id="archiveCategoryTabs"></div>
     <div id="archiveContent"></div>
   </div>
 
@@ -314,12 +384,16 @@
 </div>
 
 <script>
-  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzlZ2QkmIW23ubLua1ngq0EDZD-h0yG-vedxzxGsoQ7jW14v0zzOKxb7P1qFyljqPPv3A/exec";
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwBWkHhlR3pG_DOc_ns_9Nwph6xSgtuSq3MjXVWxeSPIqhW9RIZY1y1l_Hf7P28GwNTBA/exec";
   
   let allRawData = [];
   let tabList = []; 
   let currentTab = ''; 
   let isArchiveMode = false;
+  
+  let archivedRawData = [];
+  let categoryOrder = [];
+  let currentArchiveCategory = '';
 
   window.addEventListener('DOMContentLoaded', () => {
     loadData();
@@ -413,7 +487,6 @@
     const bookBox = document.createElement('div');
     bookBox.className = 'book-box';
 
-    // 작품 헤더 (작품명 + [저장] 버턴)
     const bookHeaderDiv = document.createElement('div');
     bookHeaderDiv.className = 'book-header';
 
@@ -454,7 +527,6 @@
     contentArea.appendChild(bookBox);
   }
 
-  /* 작품 전체 보관함으로 넘기기 */
   function archiveEntireTab(tabName) {
     const category = prompt(`"${tabName}" 전체 작품을 이동할 분류명을 입력하세요:\n(예: 미국영화.2026, 올해 개봉작, 넷플릭스 등)`, "미국영화.2026");
     if (!category || !category.trim()) return;
@@ -475,7 +547,25 @@
     });
   }
 
-  /* 별표(★) 토글 */
+  /* 보관된 작품을 다시 메인 화면으로 복원 */
+  function unarchiveWork(workTitle) {
+    if (!confirm(`"${workTitle}" 작품을 다시 메인 목록으로 복원하시겠습니까?`)) return;
+
+    showLoading(true);
+    fetch(WEB_APP_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: "unarchiveTab", workTitle: workTitle })
+    })
+    .then(res => res.json())
+    .then(() => {
+      loadArchiveData();
+    })
+    .catch(err => {
+      console.error("복원 처리 실패:", err);
+      showLoading(false);
+    });
+  }
+
   function toggleArchiveView() {
     isArchiveMode = !isArchiveMode;
     const mainView = document.getElementById('mainView');
@@ -488,10 +578,10 @@
     } else {
       mainView.style.display = 'block';
       archiveView.style.display = 'none';
+      loadData(); // 메인 돌아올 때 새 복원 반영
     }
   }
 
-  /* 보관함 데이터 조회 및 렌더링 */
   function loadArchiveData() {
     showLoading(true);
     fetch(WEB_APP_URL, {
@@ -500,7 +590,10 @@
     })
     .then(res => res.json())
     .then(data => {
-      renderArchiveView(data);
+      archivedRawData = data;
+      setupCategoryOrder();
+      renderArchiveCategoryTabs();
+      renderArchiveContent();
       showLoading(false);
     })
     .catch(err => {
@@ -509,47 +602,139 @@
     });
   }
 
-  function renderArchiveView(data) {
+  function setupCategoryOrder() {
+    const uniqueCats = Array.from(new Set(archivedRawData.map(it => it.category || "기타 보관")));
+    const savedOrder = JSON.parse(localStorage.getItem('archiveCatOrder') || '[]');
+
+    categoryOrder = savedOrder.filter(c => uniqueCats.includes(c));
+    uniqueCats.forEach(c => {
+      if (!categoryOrder.includes(c)) categoryOrder.push(c);
+    });
+
+    localStorage.setItem('archiveCatOrder', JSON.stringify(categoryOrder));
+
+    if (!currentArchiveCategory || !categoryOrder.includes(currentArchiveCategory)) {
+      currentArchiveCategory = categoryOrder[0] || '';
+    }
+  }
+
+  function moveCategoryOrder(cat, direction) {
+    const idx = categoryOrder.indexOf(cat);
+    if (idx === -1) return;
+
+    if (direction === 'up' && idx > 0) {
+      const temp = categoryOrder[idx - 1];
+      categoryOrder[idx - 1] = categoryOrder[idx];
+      categoryOrder[idx] = temp;
+    } else if (direction === 'down' && idx < categoryOrder.length - 1) {
+      const temp = categoryOrder[idx + 1];
+      categoryOrder[idx + 1] = categoryOrder[idx];
+      categoryOrder[idx] = temp;
+    }
+
+    localStorage.setItem('archiveCatOrder', JSON.stringify(categoryOrder));
+    renderArchiveCategoryTabs();
+    renderArchiveContent();
+  }
+
+  function renderArchiveCategoryTabs() {
+    const tabsContainer = document.getElementById('archiveCategoryTabs');
+    tabsContainer.innerHTML = '';
+
+    if (categoryOrder.length === 0) return;
+
+    categoryOrder.forEach(cat => {
+      const isAct = cat === currentArchiveCategory;
+
+      const tabItem = document.createElement('div');
+      tabItem.className = `archive-tab-item ${isAct ? 'active' : ''}`;
+
+      const label = document.createElement('span');
+      label.className = 'archive-tab-label';
+      label.innerText = cat;
+      label.onclick = () => {
+        currentArchiveCategory = cat;
+        renderArchiveCategoryTabs();
+        renderArchiveContent();
+      };
+
+      const upBtn = document.createElement('button');
+      upBtn.className = 'btn-order';
+      upBtn.innerText = '↑';
+      upBtn.title = '왼쪽으로 이동';
+      upBtn.onclick = (e) => {
+        e.stopPropagation();
+        moveCategoryOrder(cat, 'up');
+      };
+
+      const downBtn = document.createElement('button');
+      downBtn.className = 'btn-order';
+      downBtn.innerText = '↓';
+      downBtn.title = '오른쪽으로 이동';
+      downBtn.onclick = (e) => {
+        e.stopPropagation();
+        moveCategoryOrder(cat, 'down');
+      };
+
+      tabItem.appendChild(label);
+      tabItem.appendChild(upBtn);
+      tabItem.appendChild(downBtn);
+      tabsContainer.appendChild(tabItem);
+    });
+  }
+
+  function renderArchiveContent() {
     const container = document.getElementById('archiveContent');
     container.innerHTML = '';
 
-    if (!data || data.length === 0) {
-      container.innerHTML = `<div style="padding: 20px; text-align: center; color: #888;">보관된 분류 항목이 없습니다.</div>`;
+    const filtered = archivedRawData.filter(it => (it.category || "기타 보관") === currentArchiveCategory);
+
+    if (filtered.length === 0) {
+      container.innerHTML = `<div style="padding: 20px; text-align: center; color: #888;">이 분류에 보관된 작품이 없습니다.</div>`;
       return;
     }
 
-    // Category > WorkTitle 구조로 데이터 그룹화
-    const grouped = {};
-    data.forEach(item => {
-      const cat = item.category || "기타 보관";
-      const work = item.workTitle || "미지정 작품";
-      
-      if (!grouped[cat]) grouped[cat] = {};
-      if (!grouped[cat][work]) grouped[cat][work] = [];
-      grouped[cat][work].push(item);
+    const groupedWorks = {};
+    filtered.forEach(it => {
+      const work = it.workTitle || "미지정 작품";
+      if (!groupedWorks[work]) groupedWorks[work] = [];
+      groupedWorks[work].push(it);
     });
 
-    for (const [category, works] of Object.entries(grouped)) {
-      const block = document.createElement('div');
-      block.className = 'archive-category-block';
+    for (const [workTitle, items] of Object.entries(groupedWorks)) {
+      const accordion = document.createElement('div');
+      accordion.className = 'archive-accordion-item';
 
-      let html = `<div class="archive-category-header">[${category}]</div>`;
+      const header = document.createElement('div');
+      header.className = 'archive-accordion-header';
+      header.innerHTML = `
+        <span class="toggle-click-area">🎬 ${workTitle} (${items.length}개 링크) ▼</span>
+        <button type="button" class="btn-restore-work" onclick="event.stopPropagation(); unarchiveWork('${workTitle}')">메인으로 복원</button>
+      `;
 
-      for (const [workTitle, items] of Object.entries(works)) {
-        html += `<div class="archive-work-title">🎬 ${workTitle}</div>`;
-        items.forEach(it => {
-          html += `
-            <div class="sub-item">
-              <div class="sub-item-link-wrap">
-                <a href="${it.url}" target="_blank">${it.description}</a>
-              </div>
-            </div>
-          `;
-        });
-      }
+      const body = document.createElement('div');
+      body.className = 'archive-accordion-body';
 
-      block.innerHTML = html;
-      container.appendChild(block);
+      items.forEach(it => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'sub-item';
+        itemDiv.innerHTML = `
+          <div class="sub-item-link-wrap">
+            <a href="${it.url}" target="_blank">${it.description}</a>
+          </div>
+        `;
+        body.appendChild(itemDiv);
+      });
+
+      header.onclick = () => {
+        const isOpen = body.classList.contains('open');
+        body.classList.toggle('open');
+        header.querySelector('.toggle-click-area').innerHTML = `🎬 ${workTitle} (${items.length}개 링크) ${isOpen ? '▼' : '▲'}`;
+      };
+
+      accordion.appendChild(header);
+      accordion.appendChild(body);
+      container.appendChild(accordion);
     }
   }
 
